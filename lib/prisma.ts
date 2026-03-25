@@ -3,18 +3,14 @@ import { PrismaClient } from ".prisma/client";
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 function createPrismaClient(): PrismaClient {
-  const tursoUrl = process.env.TURSO_DATABASE_URL;
-  const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
+  const databaseUrl = process.env.DATABASE_URL ?? "";
 
-  if (tursoUrl) {
-    // Production: Turso (LibSQL) cloud database
-    const { createClient } = require("@libsql/client");
-    const { PrismaLibSQL } = require("@prisma/adapter-libsql");
-    const libsql = createClient({
-      url: tursoUrl,
-      authToken: tursoAuthToken,
-    });
-    const adapter = new PrismaLibSQL(libsql);
+  if (databaseUrl.startsWith("postgresql") || databaseUrl.startsWith("postgres")) {
+    // Production: PostgreSQL (Neon, Supabase, etc.)
+    const { Pool } = require("pg");
+    const { PrismaPg } = require("@prisma/adapter-pg");
+    const pool = new Pool({ connectionString: databaseUrl });
+    const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter });
   } else {
     // Development: local SQLite file
