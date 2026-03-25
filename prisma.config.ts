@@ -1,14 +1,3 @@
-import "dotenv/config";
-import { defineConfig } from "prisma/config";
-
-const url = process.env.DATABASE_URL ?? "file:./dev.db";
-
-export default defineConfig({
-  schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-  },
-  datasource: {
-    url,
-  },
-});
+// This file is used by Prisma CLI v7+ but we're using Prisma v5
+// which uses prisma/schema.prisma directly for database config
+export default {};
