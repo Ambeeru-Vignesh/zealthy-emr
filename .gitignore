@@ -50,5 +50,8 @@ next-env.d.ts
 *.db
 *.db-shm
 *.db-wal
+auth
+auth-wal
+auth-shm
 
 .vercel
